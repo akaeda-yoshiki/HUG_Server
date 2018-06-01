@@ -13,7 +13,6 @@ if(isset($_POST['name']) && isset($_POST['mail'])){//新規ユーザ登録
             echo $e->getMessage();
             exit;
         }
-
 }
 
         ?>
