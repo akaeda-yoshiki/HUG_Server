@@ -1,5 +1,5 @@
 <?php
-if(isset($_POST['name']) && isset($_POST['mail'])){//新規ユーザ登録
+if(isset($_POST['name']) && isset($_POST['mail']) && isset($_POST['role'])){//新規ユーザ登録
         try{
                 $cnt;
                 $mysqli = new mysqli( '192.168.0.159', 'miyashita', 'sonicdance', 'HUG');
@@ -15,7 +15,7 @@ if(isset($_POST['name']) && isset($_POST['mail'])){//新規ユーザ登録
                 $write=$db->prepare('INSERT INTO user (mail, name, role, number) VALUES(:mail, :name, :role, :number)');
                 $write->bindvalue(':mail',$_POST['mail']);
                 $write->bindvalue(':name',$_POST['name']);
-                $write->bindvalue(':role',1);
+                $write->bindvalue(':role',$_POST['role']);
                 $write->bindvalue(':number',$cnt + 1);
 
                 $write->execute();
