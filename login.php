@@ -11,17 +11,32 @@ if(isset($_POST['pass']) && isset($_POST['mail']) && isset($_POST['faze'])){//æ–
                         case 'login':
                                 $sqldata = $db->prepare("SELECT mail, name FROM user WHERE '$pass' = user.pass AND user.mail = '$mail'");
                                 $sqldata->execute();
-                                $db_data = null;
+                                $data = null;
                                 while ($row = $sqldata->fetch()) {
-                                        $db_data[] = array(
+                                        $data[] = array(
                                                 'mail'=>$row['mail'],
                                                 'name'=>$row['name']
                                                 );
                                 }
-                                echo json_encode($db_data);
+                                echo json_encode($data);
                                 break;
                         case 'new':
-                              
+                                $sqldata = $db->prepare("SELECT mail FROM user WHERE user.mail = '$mail'");
+                                $sqldata->execute();
+                                $data = null;
+                                while ($row = $sqldata->fetch()) {
+                                        $data[] = array(
+                                                'mail'=>$row['mail'],
+                                                );
+                                }
+                                if($data == null){
+                                        $write=$db->prepare('INSERT INTO user (mail, pass) VALUES(:mail, :pass)');
+                                        $write->bindvalue(':mail',$mail);
+                                        $write->bindvalue(':pass',$pass);
+                                        $write->execute();
+                                        $data = "ok";
+                                }
+                                echo json_encode($data);
                         break;
 
                         case 'forget':
