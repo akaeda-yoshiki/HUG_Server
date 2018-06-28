@@ -1,12 +1,15 @@
 <?php
-if(isset($_POST['word']))
+if(isset($_POST['word0']) || isset($_POST['word1']) || isset($_POST['word2']) || isset($_POST['word3']))
         try {
                 $db =new PDO('mysql:host=192.168.0.159;dbname=HUG;','miyashita','sonicdance');
-        
-                $write=$db->prepare('INSERT INTO master_assessment (word) VALUES(:word)');
-                $write->bindvalue(':word',$_POST['word']); 
-                $write->execute();
 
+                for($i = 0; $i < 4; $i++)
+                        if(!empty($_POST['word'."$i"])){
+                        $write=$db->prepare('INSERT INTO master_assessment (word) VALUES(:word)');
+                        $write->bindvalue(':word',$_POST['word'."$i"]); 
+                        $write->execute();
+                        }
+                
                 $db=null;
         } catch (Exception $e) {
         }
