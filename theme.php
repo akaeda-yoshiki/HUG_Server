@@ -51,9 +51,11 @@ if($f == 1)
 else if(isset($_POST["mode"]))
         try {
                 $db =new PDO('mysql:host=192.168.0.159;dbname=HUG;','miyashita','sonicdance');
-
-                $sqldata = $db->prepare("SELECT id, title, category, create_day, play_count FROM theme ORDER BY create_day DESC LIMIT 5
-                ");
+                if(strcmp($_POST["mode"], "not_all") == 0)
+                        $sqldata = $db->prepare("SELECT id, title, category, create_day, play_count FROM theme ORDER BY create_day DESC LIMIT 5");
+                else if(strcmp($_POST["mode"], "all") == 0)
+                        $sqldata = $db->prepare("SELECT id, title, category, create_day, play_count FROM theme ORDER BY create_day DESC");
+                
                 $sqldata->execute();
                 while ($row = $sqldata->fetch()) {
                         $db_data[] = array(
