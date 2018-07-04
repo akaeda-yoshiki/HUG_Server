@@ -34,7 +34,7 @@ if(isset($_POST['pass']) && isset($_POST['mail']) && isset($_POST['faze'])){//æ–
                                         $write->bindvalue(':mail',$mail);
                                         $write->bindvalue(':pass',$pass);
                                         $write->execute();
-                                        $data = "ok";
+                                        // $data = "ok";
                                 }
                                 echo json_encode($data);
                         break;

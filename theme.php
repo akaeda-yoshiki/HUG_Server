@@ -72,11 +72,13 @@ else if(isset($_POST["mode"]))
                 $db=null;
         } catch (Exception $e) {
         }
-else {
+else if(isset($_POST["id"])){
         try {
+
+                $id = $_POST["id"];
                 $db =new PDO('mysql:host=192.168.0.159;dbname=HUG;','miyashita','sonicdance');
 
-                $sqldata = $db->prepare("SELECT id, title, category, situation, time, area, image, target, aim, open, create_day, play_count, assessment0, assessment1, assessment2, assessment3, assessment4, assessment5, assessment6, assessment7, assessment8, assessment9 FROM theme
+                $sqldata = $db->prepare("SELECT id, title, category, situation, time, area, image, target, aim, open, create_day, play_count, assessment0, assessment1, assessment2, assessment3, assessment4, assessment5, assessment6, assessment7, assessment8, assessment9 FROM theme WHERE theme.id = '$id'
                 ");
                 $sqldata->execute();
                 while ($row = $sqldata->fetch()) {
