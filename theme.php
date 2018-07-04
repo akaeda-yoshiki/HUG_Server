@@ -10,7 +10,7 @@ if(!(isset($_POST[$word[9]])))
         $f = 0;
 if(!(isset($_POST[$word[12]])))
         $f = 0;
-if($f == 1)
+if($f == 1)//テーマの新規登録（idは重複不可）
         try {
                 $db =new PDO('mysql:host=192.168.0.159;dbname=HUG;','miyashita','sonicdance');
 
@@ -45,16 +45,19 @@ if($f == 1)
                 $write->execute();
                 $db=null;
         } catch (Exception $e) {
-                // echo "EE";
 
         }
-else if(isset($_POST["mode"]))
+else if(isset($_POST["mode"]))//テーマ一覧・5つを表示するのに必要な情報の読み込み、ソート・絞り込み
         try {
                 $db =new PDO('mysql:host=192.168.0.159;dbname=HUG;','miyashita','sonicdance');
-                if(strcmp($_POST["mode"], "not_all") == 0)
+                if(strcmp($_POST["mode"], "day") == 0)//ソート：作成日
                         $sqldata = $db->prepare("SELECT id, title, category, create_day, play_count FROM theme WHERE theme.open = '公開' ORDER BY create_day DESC LIMIT 5");
-                else if(strcmp($_POST["mode"], "all") == 0)
+                else if(strcmp($_POST["mode"], "all_day") == 0)//ソート：作成日（全件）
                         $sqldata = $db->prepare("SELECT id, title, category, create_day, play_count FROM theme WHERE theme.open = '公開' ORDER BY create_day DESC");
+                else if(strcmp($_POST["mode"], "play") == 0)//ソート：プレイ回数
+                        $sqldata = $db->prepare("SELECT id, title, category, create_day, play_count FROM theme WHERE theme.open = '公開' ORDER BY play_count DESC LIMIT 5");
+                else if(strcmp($_POST["mode"], "all_play") == 0)//ソート：プレイ回数（全件）
+                        $sqldata = $db->prepare("SELECT id, title, category, create_day, play_count FROM theme WHERE theme.open = '公開' ORDER BY play_count DESC");
                 
                 $sqldata->execute();
                 while ($row = $sqldata->fetch()) {
@@ -72,7 +75,7 @@ else if(isset($_POST["mode"]))
                 $db=null;
         } catch (Exception $e) {
         }
-else if(isset($_POST["id"])){
+else if(isset($_POST["id"])){//選択したテーマ（id）の詳細を読み込み
         try {
 
                 $id = $_POST["id"];
