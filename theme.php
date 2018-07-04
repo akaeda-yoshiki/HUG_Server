@@ -45,16 +45,16 @@ if($f == 1)
                 $write->execute();
                 $db=null;
         } catch (Exception $e) {
-                echo "EE";
+                // echo "EE";
 
         }
 else if(isset($_POST["mode"]))
         try {
                 $db =new PDO('mysql:host=192.168.0.159;dbname=HUG;','miyashita','sonicdance');
                 if(strcmp($_POST["mode"], "not_all") == 0)
-                        $sqldata = $db->prepare("SELECT id, title, category, create_day, play_count FROM theme ORDER BY create_day DESC LIMIT 5");
+                        $sqldata = $db->prepare("SELECT id, title, category, create_day, play_count FROM theme WHERE theme.open = '公開' ORDER BY create_day DESC LIMIT 5");
                 else if(strcmp($_POST["mode"], "all") == 0)
-                        $sqldata = $db->prepare("SELECT id, title, category, create_day, play_count FROM theme ORDER BY create_day DESC");
+                        $sqldata = $db->prepare("SELECT id, title, category, create_day, play_count FROM theme WHERE theme.open = '公開' ORDER BY create_day DESC");
                 
                 $sqldata->execute();
                 while ($row = $sqldata->fetch()) {
