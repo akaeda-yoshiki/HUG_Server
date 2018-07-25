@@ -38,7 +38,7 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
                 $write->execute();
 
         // SQL作成
-                $sql = "CREATE TABLE '$code' (
+                $sql = "CREATE TABLE `$code` (
 		id INT(11) AUTO_INCREMENT PRIMARY KEY,
 		name VARCHAR(20),
 		age INT(11),
@@ -46,7 +46,8 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
 	) engine=innodb default charset=utf8";
 
 	// SQL実行
-                $res = $db->query($sql);
+                $create = $db->prepare($sql);
+                $create->execute();
                 $db = null;// 切断
         } catch (PDOException $e) { //データベース接続失敗
 //     echo $e->getMessage();
