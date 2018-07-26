@@ -39,10 +39,12 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
 
         // SQL作成
                 $sql = "CREATE TABLE `$code` (
-		id INT(11) AUTO_INCREMENT PRIMARY KEY,
-		name VARCHAR(20),
-		age INT(11),
-		registry_datetime DATETIME
+		id VARCHAR(45) PRIMARY KEY,
+		data1 VARCHAR(45),
+                data2 VARCHAR(45),
+                data3 VARCHAR(45),
+                data4 VARCHAR(45),
+                data5 VARCHAR(45)
 	) engine=innodb default charset=utf8";
 
 	// SQL実行
