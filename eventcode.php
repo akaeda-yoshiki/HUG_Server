@@ -12,9 +12,6 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
                                 10
                         );
 
-        // echo $code;
-
-
                         $db = new PDO('mysql:host=192.168.0.159;dbname=HUG;', 'miyashita', 'sonicdance');
                         $sqldata = $db->prepare("SELECT code FROM eventcode WHERE eventcode.code = '$code'");
                         $sqldata->execute();
@@ -55,5 +52,37 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
 //     echo $e->getMessage();
                 exit;
         }
+} else if (isset($_POST['code']) && isset($_POST['role']) && isset($_POST['mail'])) {
+        try {
+                $code = $_POST['code'];
+                $role = $_POST['role'];
+
+                $db = new PDO('mysql:host=192.168.0.159;dbname=HUG;', 'miyashita', 'sonicdance');
+                $sqldata = $db->prepare("SELECT id FROM aaa WHERE data2 = '$role'");
+                $sqldata->execute();
+                while ($row = $sqldata->fetch()) {
+                        $db_data[] = array(
+                                'code' => $row['code']
+                        );
+                }
+        // echo $db_data;
+                if (empty($db_data)) {
+                // echo($code);
+                // 挿入***********************************************
+                        $write = $db->prepare("INSERT INTO `{$code}` (id, data1, data2, data3, data4, data5) VALUES(:id, :data1, :data2, :data3, :data4, :data5)");
+                        $write->bindvalue(':id', 1);
+                        $write->bindvalue(':data1', $role);
+                        $write->bindvalue(':data2', $_POST['mail']);
+                        $write->bindvalue(':data3', "");
+                        $write->bindvalue(':data4', "");
+                        $write->bindvalue(':data5', "");
+                        $write->execute();
+                        echo "ok";
+                }
+        } catch (PDOException $e) { //データベース接続失敗
+        //     echo $e->getMessage();
+                exit;
+        }
 }
+
 ?>
