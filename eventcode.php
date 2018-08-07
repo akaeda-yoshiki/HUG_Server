@@ -103,8 +103,35 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
         //     echo $e->getMessage();
                 exit;
         }
+} else if (isset($_POST['code']) && isset($_POST['id'])) {
+        try {
+                $id = $_POST['id'];
+                $code = $_POST['code'];
+
+                $db = new PDO('mysql:host=192.168.0.159;dbname=HUG;', 'miyashita', 'sonicdance');
+                $sqldata = $db->prepare("SELECT data1, data2, data3, data4, data5 FROM  `{$code}` WHERE  `{$code}`.id = '$id'");
+                $sqldata->execute();
+                while ($row = $sqldata->fetch()) {
+                        $db_data[] = array(
+                                'data1' => $row['data1'],
+                                'data2' => $row['data2'],
+                                'data3' => $row['data3'],
+                                'data4' => $row['data4'],
+                                'data5' => $row['data5']
+                        );
+                }
+                // echo $code . "::" . $id;
+                // echo $db_data;
+                header("Content-type: application/json; charset=UTF-8");
+                echo json_encode($db_data);
+                $db = null;
+
+        } catch (PDOException $e) { //データベース接続失敗
+        //     echo $e->getMessage();
+        }
 } else if (isset($_POST['code'])) {
         try {
+
                 $code = $_POST['code'];
 
                 $db = new PDO('mysql:host=192.168.0.159;dbname=HUG;', 'miyashita', 'sonicdance');
