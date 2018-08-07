@@ -36,7 +36,8 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
 
         // SQL作成
                 $sql = "CREATE TABLE `$code` (
-		id VARCHAR(45) PRIMARY KEY,
+                num VARCHAR(45) PRIMARY KEY,
+		id VARCHAR(45),
 		data1 VARCHAR(45),
                 data2 VARCHAR(45),
                 data3 VARCHAR(45),
@@ -56,24 +57,42 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
         try {
                 $code = $_POST['code'];
                 $role = $_POST['role'];
+                $mail = $_POST['mail'];
 
                 $db = new PDO('mysql:host=192.168.0.159;dbname=HUG;', 'miyashita', 'sonicdance');
-                $sqldata = $db->prepare("SELECT id FROM `{$code}` WHERE data2 = '$role'");
+                $sqldata = $db->prepare("SELECT id FROM `{$code}` WHERE `{$code}`.data1 = '$role'");
                 $sqldata->execute();
                 while ($row = $sqldata->fetch()) {
                         $db_data[] = array(
-                                'code' => $row['code']
+                                'id' => $row['id']
                         );
                 }
         // echo $db_data;
                 if (empty($db_data)) {
                 // echo($code);
+                        $sqldata1 = $db->prepare("SELECT name FROM user WHERE user.mail = '$mail'");
+                        $sqldata1->execute();
+                        $name = "ゲスト";
+                        while ($row = $sqldata1->fetch()) {
+                                $name = $row['name'];
+                                // $db_data[] = array(
+                                //         'name' => $row['name']
+                                // );
+                        }
+                        // echo $name;
+
+                        $db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+                        $sql = "SELECT * FROM `{$code}`";
+                        $stmt = $db->query($sql);
+                        $stmt->execute();
+                        $count = $stmt->rowCount();
                 // 挿入***********************************************
-                        $write = $db->prepare("INSERT INTO `{$code}` (id, data1, data2, data3, data4, data5) VALUES(:id, :data1, :data2, :data3, :data4, :data5)");
+                        $write = $db->prepare("INSERT INTO `{$code}` (num, id, data1, data2, data3, data4, data5) VALUES(:num, :id, :data1, :data2, :data3, :data4, :data5)");
+                        $write->bindvalue(':num', $count);
                         $write->bindvalue(':id', 1);
                         $write->bindvalue(':data1', $role);
-                        $write->bindvalue(':data2', $_POST['mail']);
-                        $write->bindvalue(':data3', "");
+                        $write->bindvalue(':data2', $mail);
+                        $write->bindvalue(':data3', $name);
                         $write->bindvalue(':data4', "");
                         $write->bindvalue(':data5', "");
                         $write->execute();
