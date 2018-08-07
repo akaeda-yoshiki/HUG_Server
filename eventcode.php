@@ -97,44 +97,7 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
                         );
                 }
                 $id = $db_data[0]["theme_id"];
-                // echo $id;
-                // if(empty($db_data)){
-                //         echo("oo");
-                // }
-                // else{
-                //         echo("pp");
-                // }
-                $sqldata = $db->prepare("SELECT id, title, category, situation, time, area, image, target, aim, open, create_day, play_count, assessment0, assessment1, assessment2, assessment3, assessment4, assessment5, assessment6, assessment7, assessment8, assessment9 FROM theme WHERE theme.id = '$id'");
-                $sqldata->execute();
-                while ($row = $sqldata->fetch()) {
-                        $db_data[] = array(
-                                'id' => $row['id'],
-                                'title' => $row['title'],
-                                'category' => $row['category'],
-                                'situation' => $row['situation'],
-                                'time' => $row['time'],
-                                'area' => $row['area'],
-                                'image' => $row['image'],
-                                'target' => $row['target'],
-                                'aim' => $row['aim'],
-                                'open' => $row['open'],
-                                'create_day' => $row['create_day'],
-                                'play_count' => $row['play_count'],
-                                'assessment0' => $row['assessment0'],
-                                'assessment1' => $row['assessment1'],
-                                'assessment2' => $row['assessment2'],
-                                'assessment3' => $row['assessment3'],
-                                'assessment4' => $row['assessment4'],
-                                'assessment5' => $row['assessment5'],
-                                'assessment6' => $row['assessment6'],
-                                'assessment7' => $row['assessment7'],
-                                'assessment8' => $row['assessment8'],
-                                'assessment9' => $row['assessment9'],
-                        );
-                }
-                //JSONデータ出力
-                header("Content-type: application/json; charset=UTF-8");
-                echo json_encode($db_data);
+                echo $id;
                 $db = null;
         } catch (PDOException $e) { //データベース接続失敗
         //     echo $e->getMessage();
