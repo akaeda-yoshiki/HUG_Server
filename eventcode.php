@@ -53,48 +53,72 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
 //     echo $e->getMessage();
                 exit;
         }
-} else if (isset($_POST['code']) && isset($_POST['role']) && isset($_POST['mail'])) {
+} else if (isset($_POST['code']) && isset($_POST['data1']) && isset($_POST['id']) && strcmp($_POST['mode'], "insert") == 0) {
         try {
+
+                $data1 = $_POST['data1'];
+                $data2 = "";
+                $data3 = "";
+                $data4 = "";
+                $data5 = "";
+                if (isset($_POST['data2']))
+                        $data2 = $_POST['data2'];
+                if (isset($_POST['data3']))
+                        $data3 = $_POST['data3'];
+                if (isset($_POST['data4']))
+                        $data4 = $_POST['data4'];
+                if (isset($_POST['data5']))
+                        $data5 = $_POST['data5'];
+
+                $id = $_POST['id'];
                 $code = $_POST['code'];
-                $role = $_POST['role'];
-                $mail = $_POST['mail'];
 
                 $db = new PDO('mysql:host=192.168.0.159;dbname=HUG;', 'miyashita', 'sonicdance');
-                $sqldata = $db->prepare("SELECT id FROM `{$code}` WHERE `{$code}`.data1 = '$role'");
-                $sqldata->execute();
-                while ($row = $sqldata->fetch()) {
-                        $db_data[] = array(
-                                'id' => $row['id']
-                        );
+
+                $insert_flag = true;
+                switch ($id) {
+                        case 1:
+                                // echo ("メンバー登録");
+                                $sqldata = $db->prepare("SELECT id FROM `{$code}` WHERE `{$code}`.data1 = '$data1'");
+                                $sqldata->execute();
+                                while ($row = $sqldata->fetch()) {
+                                        $db_data[] = array(
+                                                'id' => $row['id']
+                                        );
+                                }
+                                if (empty($db_data)) {
+                                        // echo ("成功");
+                                        // echo($code);
+                                        $sqldata = $db->prepare("SELECT name FROM user WHERE user.mail = '$data2'");
+                                        $sqldata->execute();
+
+                                        while ($row = $sqldata->fetch()) {
+                                                $data3 = $row['name'];
+                                        }
+                                        if (empty($data3))
+                                                $data3 = "ゲスト";
+                                } else {
+                                        // echo ("失敗");
+                                        $insert_flag = false;
+                                }
+                                break;
                 }
-        // echo $db_data;
-                if (empty($db_data)) {
+                if ($insert_flag) {
                 // echo($code);
-                        $sqldata1 = $db->prepare("SELECT name FROM user WHERE user.mail = '$mail'");
-                        $sqldata1->execute();
-                        $name = "ゲスト";
-                        while ($row = $sqldata1->fetch()) {
-                                $name = $row['name'];
-                                // $db_data[] = array(
-                                //         'name' => $row['name']
-                                // );
-                        }
-                        // echo $name;
 
                         $db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
-                        $sql = "SELECT * FROM `{$code}`";
-                        $stmt = $db->query($sql);
+                        $stmt = $db->prepare("SELECT * FROM `{$code}`");
                         $stmt->execute();
                         $count = $stmt->rowCount();
                 // 挿入***********************************************
                         $write = $db->prepare("INSERT INTO `{$code}` (num, id, data1, data2, data3, data4, data5) VALUES(:num, :id, :data1, :data2, :data3, :data4, :data5)");
                         $write->bindvalue(':num', $count);
-                        $write->bindvalue(':id', 1);
-                        $write->bindvalue(':data1', $role);
-                        $write->bindvalue(':data2', $mail);
-                        $write->bindvalue(':data3', $name);
-                        $write->bindvalue(':data4', "");
-                        $write->bindvalue(':data5', "");
+                        $write->bindvalue(':id', $id);
+                        $write->bindvalue(':data1', $data1);
+                        $write->bindvalue(':data2', $data2);
+                        $write->bindvalue(':data3', $data3);
+                        $write->bindvalue(':data4', $data4);
+                        $write->bindvalue(':data5', $data5);
                         $write->execute();
                         echo "ok";
                 }
