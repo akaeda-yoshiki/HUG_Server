@@ -1,5 +1,7 @@
 <?php
-
+$mode = "";
+if (isset($_POST['mode']))
+        $mode = $_POST['mode'];
 if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open'])) {
         try {
                 $loop = true;
@@ -53,7 +55,7 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
 //     echo $e->getMessage();
                 exit;
         }
-} else if (isset($_POST['code']) && isset($_POST['data1']) && isset($_POST['id']) && strcmp($_POST['mode'], "insert") == 0) {
+} else if (isset($_POST['code']) && isset($_POST['data1']) && isset($_POST['id']) && strcmp($mode, "insert") == 0) {
         try {
 
                 $data1 = $_POST['data1'];
@@ -104,12 +106,13 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
                                 break;
                 }
                 if ($insert_flag) {
-                // echo($code);
+               
 
                         $db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
                         $stmt = $db->prepare("SELECT * FROM `{$code}`");
                         $stmt->execute();
                         $count = $stmt->rowCount();
+                        //  echo($count);
                 // 挿入***********************************************
                         $write = $db->prepare("INSERT INTO `{$code}` (num, id, data1, data2, data3, data4, data5) VALUES(:num, :id, :data1, :data2, :data3, :data4, :data5)");
                         $write->bindvalue(':num', $count);
@@ -121,6 +124,32 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
                         $write->bindvalue(':data5', $data5);
                         $write->execute();
                         echo "ok";
+                }
+                $db = null;
+        } catch (PDOException $e) { //データベース接続失敗
+        //     echo $e->getMessage();
+                exit;
+        }
+} else if (isset($_POST['code']) && isset($_POST['id']) && strcmp($mode, "delete") == 0) {
+        try {
+
+                $data = "";
+                if (isset($_POST['data']))
+                        $data = $_POST['data'];
+
+                $id = $_POST['id'];
+                $code = $_POST['code'];
+
+                $db = new PDO('mysql:host=192.168.0.159;dbname=HUG;', 'miyashita', 'sonicdance');
+
+                $insert_flag = true;
+                switch ($id) {
+                        case 1:
+                                if (isset($_POST['data1']))
+                                        $data1 = $_POST['data1'];
+                                $sqldata = $db->prepare("DELETE FROM `{$code}` WHERE  `{$code}`.id = '$id' AND `{$code}`.data2 = '$data' AND `{$code}`.data1 = '$data1'");
+                                $sqldata->execute();
+                                break;
                 }
                 $db = null;
         } catch (PDOException $e) { //データベース接続失敗
