@@ -101,12 +101,13 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
                                                 $data3 = "ゲスト";
                                 } else {
                                         // echo ("失敗");
+
                                         $insert_flag = false;
                                 }
                                 break;
                 }
                 if ($insert_flag) {
-               
+
 
                         $db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
                         $stmt = $db->prepare("SELECT * FROM `{$code}`");
@@ -147,7 +148,8 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
                         case 1:
                                 if (isset($_POST['data1']))
                                         $data1 = $_POST['data1'];
-                                $sqldata = $db->prepare("DELETE FROM `{$code}` WHERE  `{$code}`.id = '$id' AND `{$code}`.data2 = '$data' AND `{$code}`.data1 = '$data1'");
+                                // $sqldata = $db->prepare("DELETE FROM `{$code}` WHERE  `{$code}`.id = '$id' AND `{$code}`.data2 = '$data' AND `{$code}`.data1 = '$data1'");
+                                $sqldata = $db->prepare("UPDATE  `{$code}` set id = -1 WHERE  `{$code}`.id = '$id' AND `{$code}`.data2 = '$data' AND `{$code}`.data1 = '$data1'");
                                 $sqldata->execute();
                                 break;
                 }
