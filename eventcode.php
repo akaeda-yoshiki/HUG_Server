@@ -50,6 +50,8 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
 	// SQL実行
                 $create = $db->prepare($sql);
                 $create->execute();
+
+                // mkdir("image/$code", 777);
                 $db = null;// 切断
         } catch (PDOException $e) { //データベース接続失敗
 //     echo $e->getMessage();
@@ -104,6 +106,9 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
 
                                         $insert_flag = false;
                                 }
+                                break;
+                        case 2:
+
                                 break;
                 }
                 if ($insert_flag) {

@@ -1,9 +1,9 @@
 
 データベースに各イベントコードの情報を保存するIDとデータ対応
 
-ID    data1           data2           data3           data4           data5
-1     役割            メール           名前
-2
+ID      data1           data2           data3           data4           data5
+1       役割            メール           名前                                     【参加メンバー】
+2       状況            評価項目の値      画像            経過時間                 【PM作成の状況】
 3
 4
 5
@@ -12,3 +12,5 @@ ID    data1           data2           data3           data4           data5
 8
 9
 10
+
+-1 削除済み（行ごと消すと番号で不具合）
