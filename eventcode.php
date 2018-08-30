@@ -81,7 +81,7 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
                 switch ($id) {
                         case 1:
                                 // echo ("メンバー登録");
-                                $sqldata = $db->prepare("SELECT id FROM `{$code}` WHERE `{$code}`.data1 = '$data1'");
+                                $sqldata = $db->prepare("SELECT id FROM `{$code}` WHERE `{$code}`.data1 = '$data1' AND `{$code}`.id = 1");
                                 $sqldata->execute();
                                 while ($row = $sqldata->fetch()) {
                                         $db_data[] = array(
