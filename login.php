@@ -1,6 +1,6 @@
 <?php
-if(isset($_POST['pass']) && isset($_POST['mail']) && isset($_POST['faze'])){//新規ユーザ登録
-        try{
+if (isset($_POST['pass']) && isset($_POST['mail']) && isset($_POST['faze'])) {//新規ユーザ登録
+        try {
                 // 接続
                 $db = new PDO('mysql:host=192.168.0.159;dbname=HUG', 'miyashita', 'sonicdance');
 
@@ -14,9 +14,11 @@ if(isset($_POST['pass']) && isset($_POST['mail']) && isset($_POST['faze'])){//�
                                 $data = null;
                                 while ($row = $sqldata->fetch()) {
                                         $data[] = array(
-                                                'name'=>$row['name']
-                                                );
+                                                'name' => $row['name']
+                                        );
                                 }
+                                header("Content-type: application/json; charset=UTF-8");
+
                                 echo json_encode($data);
                                 break;
                         case 'new':
@@ -25,22 +27,24 @@ if(isset($_POST['pass']) && isset($_POST['mail']) && isset($_POST['faze'])){//�
                                 $data = null;
                                 while ($row = $sqldata->fetch()) {
                                         $data[] = array(
-                                                'mail'=>$row['mail'],
-                                                );
+                                                'mail' => $row['mail'],
+                                        );
                                 }
-                                if($data == null){
-                                        $write=$db->prepare('INSERT INTO user (mail, pass) VALUES(:mail, :pass)');
-                                        $write->bindvalue(':mail',$mail);
-                                        $write->bindvalue(':pass',$pass);
+                                if ($data == null) {
+                                        $write = $db->prepare('INSERT INTO user (mail, pass) VALUES(:mail, :pass)');
+                                        $write->bindvalue(':mail', $mail);
+                                        $write->bindvalue(':pass', $pass);
                                         $write->execute();
-                                        // $data = "ok";
+                                        $data = "ok";
                                 }
+                                header("Content-type: application/json; charset=UTF-8");
+
                                 echo json_encode($data);
-                        break;
+                                break;
 
                         case 'forget':
-                              
-                        break;
+
+                                break;
 
                 }
                 
@@ -64,9 +68,9 @@ if(isset($_POST['pass']) && isset($_POST['mail']) && isset($_POST['faze'])){//�
                 // $write->execute();
                 // echo json_encode($cnt + 1);
                 $db = null;// 切断
-        } catch(PDOException $e){ //データベース接続失敗
+        } catch (PDOException $e) { //データベース接続失敗
         //     echo $e->getMessage();
-            exit;
+                exit;
         }
 }
 
