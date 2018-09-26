@@ -2,6 +2,8 @@
 $mode = "";
 if (isset($_POST['mode']))
         $mode = $_POST['mode'];
+
+        //イベントコードの生成******************************************************************************
 if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open'])) {
         try {
                 $loop = true;
@@ -57,6 +59,7 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
 //     echo $e->getMessage();
                 exit;
         }
+        // 引数のイベントコードへの新規データ挿入******************************************************************************
 } else if (isset($_POST['code']) && isset($_POST['data1']) && isset($_POST['id']) && strcmp($mode, "insert") == 0) {
         try {
 
@@ -136,6 +139,7 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
         //     echo $e->getMessage();
                 exit;
         }
+        // 引数のイベントコードのデータを削除******************************************************************************
 } else if (isset($_POST['code']) && isset($_POST['id']) && strcmp($mode, "delete") == 0) {
         try {
 
@@ -163,16 +167,19 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
         //     echo $e->getMessage();
                 exit;
         }
+        // 指定IDのデータを読み込む
 } else if (isset($_POST['code']) && isset($_POST['id'])) {
         try {
                 $id = $_POST['id'];
                 $code = $_POST['code'];
 
                 $db = new PDO('mysql:host=192.168.0.159;dbname=HUG;', 'miyashita', 'sonicdance');
-                $sqldata = $db->prepare("SELECT data1, data2, data3, data4, data5 FROM  `{$code}` WHERE  `{$code}`.id = '$id'");
+                $sqldata = $db->prepare("SELECT num, id, data1, data2, data3, data4, data5 FROM  `{$code}` WHERE  `{$code}`.id = '$id'");
                 $sqldata->execute();
                 while ($row = $sqldata->fetch()) {
                         $db_data[] = array(
+                                "num" => $row['num'],
+                                "id" => $row['id'],
                                 'data1' => $row['data1'],
                                 'data2' => $row['data2'],
                                 'data3' => $row['data3'],
@@ -189,6 +196,7 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
         } catch (PDOException $e) { //データベース接続失敗
         //     echo $e->getMessage();
         }
+        // イベントコードからテーマIDを読み込む******************************************************************************
 } else if (isset($_POST['code'])) {
         try {
 
