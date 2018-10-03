@@ -187,8 +187,6 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
                                 'data5' => $row['data5']
                         );
                 }
-                // echo $code . "::" . $id;
-                // echo $db_data;
                 header("Content-type: application/json; charset=UTF-8");
                 echo json_encode($db_data);
                 $db = null;
@@ -197,7 +195,34 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
         //     echo $e->getMessage();
         }
         // イベントコードからテーマIDを読み込む******************************************************************************
-} else if (isset($_POST['code'])) {
+} else if (isset($_POST['code']) && isset($_POST['num'])) {
+        try {
+                $num = $_POST['num'];
+                $code = $_POST['code'];
+
+                $db = new PDO('mysql:host=192.168.0.159;dbname=HUG;', 'miyashita', 'sonicdance');
+                $sqldata = $db->prepare("SELECT num, id, data1, data2, data3, data4, data5 FROM  `{$code}` WHERE  `{$code}`.num = '$num'");
+                $sqldata->execute();
+                while ($row = $sqldata->fetch()) {
+                        $db_data[] = array(
+                                "num" => $row['num'],
+                                "id" => $row['id'],
+                                'data1' => $row['data1'],
+                                'data2' => $row['data2'],
+                                'data3' => $row['data3'],
+                                'data4' => $row['data4'],
+                                'data5' => $row['data5']
+                        );
+                }
+                header("Content-type: application/json; charset=UTF-8");
+                echo json_encode($db_data);
+                $db = null;
+
+        } catch (PDOException $e) { //データベース接続失敗
+        //     echo $e->getMessage();
+        }
+        // イベントコードからテーマIDを読み込む******************************************************************************
+}else if (isset($_POST['code'])) {
         try {
 
                 $code = $_POST['code'];
