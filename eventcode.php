@@ -111,7 +111,13 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
                                 }
                                 break;
                         case 2:
-
+                                if (!empty($data3)) {
+                                        $db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+                                        $stmt = $db->prepare("SELECT * FROM `{$code}`");
+                                        $stmt->execute();
+                                        $count = $stmt->rowCount();
+                                        $data3 = $data3 . "_" . $count;
+                                }
                                 break;
                 }
                 if ($insert_flag) {
@@ -132,7 +138,10 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
                         $write->bindvalue(':data4', $data4);
                         $write->bindvalue(':data5', $data5);
                         $write->execute();
-                        echo "ok";
+                        if ($id == 2)
+                                echo "ok/" . $count;
+                        else
+                                echo "ok";
                 }
                 $db = null;
         } catch (PDOException $e) { //データベース接続失敗
@@ -222,7 +231,7 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
         //     echo $e->getMessage();
         }
         // イベントコードからテーマIDを読み込む******************************************************************************
-}else if (isset($_POST['code'])) {
+} else if (isset($_POST['code'])) {
         try {
 
                 $code = $_POST['code'];

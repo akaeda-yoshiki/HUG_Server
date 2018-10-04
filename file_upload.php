@@ -17,7 +17,22 @@
 // $url = $_POST["file"];
 // $data = file_get_contents($url);
 // file_put_contents('image/test.PNG', $url);
-if (strlen($_FILES["pic"]["name"]) > 0 ) {
+// if (strlen($_FILES["pic"]["name"]) > 0 && isset($_POST["code"]) && isset($_POST["num"])) {
+if (strlen($_FILES["pic"]["name"]) > 0 && isset($_GET["code"]) && isset($_GET["num"])) {
+        try {
+                // $code = $_POST["code"];
+                // $num = $_POST["num"];
+                $code = $_GET["code"];
+                $num = $_GET["num"];
+
+                if (!move_uploaded_file($_FILES["pic"]["tmp_name"], "image/" . $code . "_" . $num . ".jpeg")) {
+                        echo "アップロードに失敗しました<br>";
+                }
+                $db = null;
+        } catch (Exception $e) {
+
+        }
+} else if (strlen($_FILES["pic"]["name"]) > 0) {
         try {
                 $db = new PDO('mysql:host=192.168.0.159;dbname=HUG;', 'miyashita', 'sonicdance');
 
@@ -29,12 +44,6 @@ if (strlen($_FILES["pic"]["name"]) > 0 ) {
                 $filename = $_FILES["pic"]["name"];
                 if (!move_uploaded_file($_FILES["pic"]["tmp_name"], "image/" . $count . ".jpeg")) {
                         print "アップロードに失敗しました<br>";
-                } else {
-                        print "name=";
-                        print $filename;
-                        print "<BR>";
-                        print "<IMG src='$filename'>";
-                        print "<BR>";
                 }
                 $db = null;
         } catch (Exception $e) {
