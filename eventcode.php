@@ -42,7 +42,7 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
                 $sql = "CREATE TABLE `$code` (
                 num VARCHAR(45) PRIMARY KEY,
 		id VARCHAR(45),
-		data1 VARCHAR(45),
+		data1 VARCHAR(100),
                 data2 VARCHAR(45),
                 data3 VARCHAR(45),
                 data4 VARCHAR(45),
