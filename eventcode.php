@@ -111,6 +111,7 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
                                 }
                                 break;
                         case 2:
+                        case 4:
                                 if (!empty($data3)) {
                                         $db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
                                         $stmt = $db->prepare("SELECT * FROM `{$code}`");
