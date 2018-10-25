@@ -111,14 +111,26 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
                                 }
                                 break;
                         case 2:
+                                if (!empty($data3)) {
+                                        $db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+                                        $stmt = $db->prepare("SELECT * FROM `{$code}`");
+                                        $stmt->execute();
+                                        $count = $stmt->rowCount();
+                                        // $data3 = $data3 . "_" . str_pad($count, 4, 0, STR_PAD_LEFT);
+                                        $data3 = $data3 . "_" . $count;
+                                }
+                                break;
                         case 4:
                                 if (!empty($data3)) {
                                         $db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
                                         $stmt = $db->prepare("SELECT * FROM `{$code}`");
                                         $stmt->execute();
                                         $count = $stmt->rowCount();
+                                        // $data3 = $data3 . "_" . str_pad($count, 4, 0, STR_PAD_LEFT);
                                         $data3 = $data3 . "_" . $count;
+
                                 }
+                                // $data3 = $data3 . $data2;
                                 break;
                 }
                 if ($insert_flag) {
@@ -131,6 +143,7 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
                         //  echo($count);
                 // 挿入***********************************************
                         $write = $db->prepare("INSERT INTO `{$code}` (num, id, data1, data2, data3, data4, data5) VALUES(:num, :id, :data1, :data2, :data3, :data4, :data5)");
+                        // $write->bindvalue(':num', str_pad($count, 4, 0, STR_PAD_LEFT));
                         $write->bindvalue(':num', $count);
                         $write->bindvalue(':id', $id);
                         $write->bindvalue(':data1', $data1);
@@ -150,13 +163,15 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
                 exit;
         }
         // 引数のイベントコードのデータを削除******************************************************************************
-} else if (isset($_POST['code']) && isset($_POST['id']) && strcmp($mode, "delete") == 0) {
+} else if (isset($_POST['code']) && isset($_POST['id']) && strcmp($mode, "updata") == 0) {
         try {
 
                 $data = "";
+                $data1 = "";
                 if (isset($_POST['data']))
                         $data = $_POST['data'];
-
+                if (isset($_POST['data1']))
+                        $data1 = $_POST['data1'];
                 $id = $_POST['id'];
                 $code = $_POST['code'];
 
@@ -165,11 +180,14 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
                 $insert_flag = true;
                 switch ($id) {
                         case 1:
-                                if (isset($_POST['data1']))
-                                        $data1 = $_POST['data1'];
+                                
                                 // $sqldata = $db->prepare("DELETE FROM `{$code}` WHERE  `{$code}`.id = '$id' AND `{$code}`.data2 = '$data' AND `{$code}`.data1 = '$data1'");
                                 $sqldata = $db->prepare("UPDATE  `{$code}` set id = -1 WHERE  `{$code}`.id = '$id' AND `{$code}`.data2 = '$data' AND `{$code}`.data1 = '$data1'");
                                 $sqldata->execute();
+                                break;
+                        case 4:
+                                $sqldata1 = $db->prepare("UPDATE  `{$code}` set data5 = 1 WHERE num = '$data'");
+                                $sqldata1->execute();
                                 break;
                 }
                 $db = null;
@@ -207,6 +225,7 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
         // イベントコードからテーマIDを読み込む******************************************************************************
 } else if (isset($_POST['code']) && isset($_POST['num'])) {
         try {
+                // $num = str_pad($_POST['num'], 4, 0, STR_PAD_LEFT);
                 $num = $_POST['num'];
                 $code = $_POST['code'];
 
