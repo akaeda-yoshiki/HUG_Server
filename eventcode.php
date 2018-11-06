@@ -60,6 +60,30 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
                 exit;
         }
         // 引数のイベントコードへの新規データ挿入******************************************************************************
+} else if (isset($_POST['code']) && strcmp($mode, "event_confirm") == 0) {
+
+        $code = $_POST['code'];
+        try {
+                $db = new PDO('mysql:host=192.168.0.159;dbname=HUG;', 'miyashita', 'sonicdance');
+
+                $sqldata = $db->prepare("SELECT code FROM eventcode WHERE '$code' = eventcode.code AND eventcode.open = 'ok'");
+                $sqldata->execute();
+
+                while ($row = $sqldata->fetch()) {
+                        $db_data[] = array(
+                                'code' => $row['code']
+                        );
+                }
+
+                if (!empty($db_data))
+                        echo "ok";
+                else
+                        echo "no";
+                $db = null;// 切断
+        } catch (PDOException $e) { //データベース接続失敗
+                //     echo $e->getMessage();
+                exit;
+        }
 } else if (isset($_POST['code']) && isset($_POST['data1']) && isset($_POST['id']) && strcmp($mode, "insert") == 0) {
         try {
 
