@@ -244,7 +244,7 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
                 $db = null;
 
         } catch (PDOException $e) { //データベース接続失敗
-        //     echo $e->getMessage();
+                echo $e->getMessage();
         }
         // イベントコードからテーマIDを読み込む******************************************************************************
 } else if (isset($_POST['code']) && isset($_POST['num'])) {
