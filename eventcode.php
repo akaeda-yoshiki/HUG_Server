@@ -220,6 +220,85 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
                 exit;
         }
         // 指定IDのデータを読み込む
+} else if (isset($_POST['code']) && isset($_POST['num']) && strcmp($mode, "trace") == 0) {
+        try {
+
+                $data = "";
+                $data1 = "";
+                if (isset($_POST['data']))
+                        $data = $_POST['data'];
+                if (isset($_POST['data1']))
+                        $data1 = $_POST['data1'];
+                $num = $_POST['num'];
+                $code = $_POST['code'];
+
+                $db = new PDO('mysql:host=192.168.0.159;dbname=HUG;', 'miyashita', 'sonicdance');
+
+                $sqldata = $db->prepare("SELECT num, id, data1, data2, data3, data4, data5 FROM  `{$code}` WHERE  `{$code}`.num = '$num'");
+                $sqldata->execute();
+                while ($row = $sqldata->fetch()) {
+                        $db_data[] = array(
+                                "num" => $row['num'],
+                                "id" => $row['id'],
+                                'data1' => $row['data1'],
+                                'data2' => $row['data2'],
+                                'data3' => $row['data3'],
+                                'data4' => $row['data4'],
+                                'data5' => $row['data5']
+                        );
+                }
+
+                $insert_flag = true;
+
+                switch ($db_data[0]["id"]) {
+                        case 2:
+                        case 3:
+                                $trace_num = $db_data[0]["num"];
+                                $sqldata = $db->prepare("SELECT num, id, data1, data2, data3, data4, data5 FROM  `{$code}` WHERE  `{$code}`.data2 = '$trace_num' AND id = 4");
+                                $sqldata->execute();
+                                break;
+                        case 4:
+                                $trace_num = $db_data[0]["data2"];
+                                $sqldata = $db->prepare("SELECT num, id, data1, data2, data3, data4, data5 FROM  `{$code}` WHERE  `{$code}`.num = '$trace_num'");
+                                $sqldata->execute();
+                                
+                                while ($row = $sqldata->fetch()) {
+                                        $db_data2[] = array(
+                                                "num" => $row['num'],
+                                                "id" => $row['id'],
+                                                'data1' => $row['data1'],
+                                                'data2' => $row['data2'],
+                                                'data3' => $row['data3'],
+                                                'data4' => $row['data4'],
+                                                'data5' => $row['data5']
+                                        );
+                                }
+                                $db_data = $db_data2;
+                                $trace_num = $db_data2[0]["num"];
+                                $sqldata = $db->prepare("SELECT num, id, data1, data2, data3, data4, data5 FROM  `{$code}` WHERE  `{$code}`.data2 = '$trace_num' AND id = 4");
+                                $sqldata->execute();
+                                break;
+                }
+
+                while ($row = $sqldata->fetch()) {
+                        $db_data1[] = array(
+                                "num" => $row['num'],
+                                "id" => $row['id'],
+                                'data1' => $row['data1'],
+                                'data2' => $row['data2'],
+                                'data3' => $row['data3'],
+                                'data4' => $row['data4'],
+                                'data5' => $row['data5']
+                        );
+                }
+                header("Content-type: application/json; charset=UTF-8");
+                echo json_encode(array_merge($db_data, $db_data1));
+                $db = null;
+        } catch (PDOException $e) { //データベース接続失敗
+        //     echo $e->getMessage();
+                exit;
+        }
+        // 指定IDのデータを読み込む
 } else if (isset($_POST['code']) && isset($_POST['id'])) {
         try {
                 $id = $_POST['id'];
