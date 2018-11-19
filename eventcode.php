@@ -176,7 +176,7 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
                         $write->bindvalue(':data4', $data4);
                         $write->bindvalue(':data5', $data5);
                         $write->execute();
-                        if ($id == 2)
+                        if ($id == 2 || $id == 4)
                                 echo "ok/" . $count;
                         else
                                 echo "ok";
@@ -261,7 +261,7 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
                                 $trace_num = $db_data[0]["data2"];
                                 $sqldata = $db->prepare("SELECT num, id, data1, data2, data3, data4, data5 FROM  `{$code}` WHERE  `{$code}`.num = '$trace_num'");
                                 $sqldata->execute();
-                                
+
                                 while ($row = $sqldata->fetch()) {
                                         $db_data2[] = array(
                                                 "num" => $row['num'],
