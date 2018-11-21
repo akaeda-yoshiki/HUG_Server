@@ -5,6 +5,9 @@ if (isset($_POST['mode']))
         $mode = $_POST['mode'];
 
 $now_time = array(
+        "year" => date("Y"),
+        "month" => date("m"),
+        "day" => date("d"),
         "hour" => date("G"),
         "minute" => date("i"),
         "second" => date("s")
@@ -26,7 +29,7 @@ if (isset($_POST['code']) && strcmp($mode, "new") == 0) {
                 $write->bindvalue(':data1', $now_time["hour"] . "_" . $now_time["minute"] . "_" . $now_time["second"]);
                 $write->bindvalue(':data2', "0_0_0");
                 $write->bindvalue(':data3', "0_0_0");
-                $write->bindvalue(':data4', "");
+                $write->bindvalue(':data4', $now_time["year"] . "/" . $now_time["month"] . "/" . $now_time["day"]);
                 $write->bindvalue(':data5', "");
 
                 $write->execute();
