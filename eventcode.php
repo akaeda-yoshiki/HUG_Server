@@ -66,7 +66,7 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
         try {
                 $db = new PDO('mysql:host=192.168.0.159;dbname=HUG;', 'miyashita', 'sonicdance');
 
-                $sqldata = $db->prepare("SELECT code FROM eventcode WHERE '$code' = eventcode.code AND eventcode.open = 'ok'");
+                $sqldata = $db->prepare("SELECT code FROM eventcode WHERE '$code' = eventcode.code");
                 $sqldata->execute();
 
                 while ($row = $sqldata->fetch()) {
@@ -75,10 +75,22 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
                         );
                 }
 
-                if (!empty($db_data))
-                        echo "ok";
-                else
+                if (!empty($db_data)) {
+                        $sqldata = $db->prepare("SELECT stage FROM eventcode WHERE '$code' = eventcode.code");
+                        $sqldata->execute();
+                        while ($row = $sqldata->fetch()) {
+                                $db_data1[] = array(
+                                        'stage' => $row['stage']
+                                );
+                        }
+                        if ($db_data1[0]["stage"] == 0)
+                                echo "ok";
+                        else
+                                echo "play_now";
+                } else
                         echo "no";
+
+
                 $db = null;// 切断
         } catch (PDOException $e) { //データベース接続失敗
                 //     echo $e->getMessage();

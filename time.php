@@ -31,8 +31,10 @@ if (isset($_POST['code']) && strcmp($mode, "new") == 0) {
                 $write->bindvalue(':data3', "0_0_0");
                 $write->bindvalue(':data4', $now_time["year"] . "/" . $now_time["month"] . "/" . $now_time["day"]);
                 $write->bindvalue(':data5', "");
-
                 $write->execute();
+
+                $sqldata = $db->prepare("UPDATE  eventcode set stage = 1 WHERE code = '$code'");
+                $sqldata->execute();
 
                 $db = null;// 切断
         } catch (PDOException $e) { //データベース接続失敗
@@ -87,6 +89,26 @@ if (isset($_POST['code']) && strcmp($mode, "new") == 0) {
         //     echo $e->getMessage();
                 exit;
         }
+} else if (isset($_POST['code']) && strcmp($mode, "finish") == 0) {
+        $code = $_POST['code'];
+
+        $db = new PDO('mysql:host=192.168.0.159;dbname=HUG;', 'miyashita', 'sonicdance');
+        $db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+        $stmt = $db->prepare("SELECT * FROM `{$code}`");
+        $stmt->execute();
+        $count = $stmt->rowCount();
+        $write = $db->prepare("INSERT INTO `{$code}` (num, id, data1, data2, data3, data4, data5) VALUES(:num, :id, :data1, :data2, :data3, :data4, :data5)");
+        $write->bindvalue(':num', $count);
+        $write->bindvalue(':id', "6");
+        $write->bindvalue(':data1', "");
+        $write->bindvalue(':data2', "");
+        $write->bindvalue(':data3', "");
+        $write->bindvalue(':data4', "");
+        $write->bindvalue(':data5', "");
+        $write->execute();
+
+        $sqldata = $db->prepare("UPDATE  eventcode set stage = 2 WHERE code = '$code'");
+        $sqldata->execute();
 }
 
 ?>
