@@ -24,9 +24,9 @@ if (isset($_POST["image"]) && isset($_POST["code"]) && isset($_POST["num"])) {
         $imageData = $_POST['image'];
         $filename = "image/" . $code . "_" . $num . ".jpeg";
         
-        $fp = fopen($filename, 'w');
+        $fp = fopen($filename, 'w+');
         fwrite($fp, base64_decode($imageData));
-        $filename = chmod($filename, 0666);
+        $filename = chmod($filename, 0644);
         fclose($fp);
 
         // try {
