@@ -1,12 +1,36 @@
 <?php
 
-
-
 try {
 
+        $title = "";
+        $category = "";
+        $situation = "";
+        $time = "";
+        $area = "";
+        $target = "";
+        $aim = "";
+        $assessment = "";
+
+
+        if (isset($_POST["title"]))
+                $title = $_POST["title"];
+        if (isset($_POST["category"]))
+                $category = $_POST["category"];
+        if (isset($_POST["situation"]))
+                $situation = $_POST["situation"];
+        if (isset($_POST["time"]))
+                $time = $_POST["time"];
+        if (isset($_POST["area"]))
+                $area = $_POST["area"];
+        if (isset($_POST["target"]))
+                $target = $_POST["target"];
+        if (isset($_POST["aim"]))
+                $aim = $_POST["aim"];
+        if (isset($_POST["assessment"]))
+                $assessment = $_POST["assessment"];
 
         $db = new PDO('mysql:host=192.168.0.159;dbname=HUG;', 'miyashita', 'sonicdance');
-        $sqldata = $db->prepare("SELECT theme_id, code FROM eventcode WHERE eventcode.open = 'ok'");
+        $sqldata = $db->prepare("SELECT theme_id, code FROM eventcode, theme WHERE eventcode.open = 'ok' AND theme.id = eventcode.theme_id AND theme.title LIKE '%$title%' AND theme.category LIKE '%$category%' AND theme.situation LIKE '%$situation%' AND theme.time LIKE '%$time%' AND theme.area LIKE '%$area%' AND theme.target LIKE '%$target%' AND theme.aim LIKE '%$aim%' AND (theme.assessment0 LIKE '%$assessment%' OR theme.assessment1 LIKE '%$assessment%' OR theme.assessment2 LIKE '%$assessment%' OR theme.assessment3 LIKE '%$assessment%' OR theme.assessment4 LIKE '%$assessment%' OR theme.assessment5 LIKE '%$assessment%' OR theme.assessment6 LIKE '%$assessment%' OR theme.assessment7 LIKE '%$assessment%' OR theme.assessment8 LIKE '%$assessment%' OR theme.assessment9 LIKE '%$assessment%')");
         $sqldata->execute();
         while ($row = $sqldata->fetch()) {
                 $db_data[] = array(
@@ -17,7 +41,7 @@ try {
         $senddate = array();
         for ($i = 0; $i < count($db_data); $i++) {
                 $code = $db_data[$i]['code'];
-                $sqldata = $db->prepare("SELECT num, id, data1, data2, data3, data4, data5 FROM  `{$code}` WHERE  `{$code}`.id = 2 OR `{$code}`.id = 3");
+                $sqldata = $db->prepare("SELECT num, id, data1, data2, data3, data4, data5 FROM  `{$code}` WHERE  (`{$code}`.id = 2 OR `{$code}`.id = 3) ");
                 $sqldata->execute();
                 while ($row = $sqldata->fetch()) {
                         $db_data1[] = array(
