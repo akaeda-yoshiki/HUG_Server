@@ -317,7 +317,11 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
                 $code = $_POST['code'];
 
                 $db = new PDO('mysql:host=192.168.0.159;dbname=HUG;', 'miyashita', 'sonicdance');
-                $sqldata = $db->prepare("SELECT num, id, data1, data2, data3, data4, data5 FROM  `{$code}` WHERE  `{$code}`.id = '$id'");
+
+                if ($id == -1)
+                        $sqldata = $db->prepare("SELECT num, id, data1, data2, data3, data4, data5 FROM  `{$code}` ");
+                else
+                        $sqldata = $db->prepare("SELECT num, id, data1, data2, data3, data4, data5 FROM  `{$code}` WHERE  `{$code}`.id = '$id'");
                 $sqldata->execute();
                 while ($row = $sqldata->fetch()) {
                         $db_data[] = array(
