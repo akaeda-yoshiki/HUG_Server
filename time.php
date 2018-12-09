@@ -1,5 +1,4 @@
 <?php
-
 $mode = "";
 if (isset($_POST['mode']))
         $mode = $_POST['mode'];
@@ -33,7 +32,10 @@ if (isset($_POST['code']) && strcmp($mode, "new") == 0) {
                 $write->bindvalue(':data5', "");
                 $write->execute();
 
+                $day = date("Y/m/d");
                 $sqldata = $db->prepare("UPDATE  eventcode set stage = 1 WHERE code = '$code'");
+                $sqldata->execute();
+                $sqldata = $db->prepare("UPDATE  eventcode set play_day = '$day' WHERE code = '$code'");
                 $sqldata->execute();
 
                 $db = null;// 切断
