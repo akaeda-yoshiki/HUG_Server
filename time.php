@@ -38,6 +38,21 @@ if (isset($_POST['code']) && strcmp($mode, "new") == 0) {
                 $sqldata = $db->prepare("UPDATE  eventcode set play_day = '$day' WHERE code = '$code'");
                 $sqldata->execute();
 
+                $sqldata1 = $db->prepare("SELECT theme_id, play_count FROM eventcode, theme WHERE eventcode.code = '$code' AND theme.id = eventcode.theme_id");
+                $sqldata1->execute();
+
+                while ($row = $sqldata1->fetch()) {
+                        $db_data[] = array(
+                                'theme_id' => $row['theme_id'],
+                                'play_count' => $row['play_count']
+                        );
+                }
+                $theme_id = $db_data[0]["theme_id"];
+                $play_count = $db_data[0]["play_count"] + 1;
+                $sqldata = $db->prepare("UPDATE  theme set play_count = '$play_count'  WHERE id = '$theme_id'");
+                $sqldata->execute();
+
+
                 $db = null;// 切断
         } catch (PDOException $e) { //データベース接続失敗
         //     echo $e->getMessage();
