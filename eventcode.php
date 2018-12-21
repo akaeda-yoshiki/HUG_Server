@@ -117,7 +117,10 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
                 $code = $_POST['code'];
 
                 $db = new PDO('mysql:host=192.168.0.159;dbname=HUG;', 'miyashita', 'sonicdance');
-
+                $db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+                $stmt = $db->prepare("SELECT * FROM `{$code}`");
+                $stmt->execute();
+                $count = $stmt->rowCount();
                 $insert_flag = true;
                 switch ($id) {
                         case 1:
@@ -147,35 +150,20 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
                                 }
                                 break;
                         case 2:
-                                if (!empty($data3)) {
-                                        $db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
-                                        $stmt = $db->prepare("SELECT * FROM `{$code}`");
-                                        $stmt->execute();
-                                        $count = $stmt->rowCount();
-                                        // $data3 = $data3 . "_" . str_pad($count, 4, 0, STR_PAD_LEFT);
-                                        $data3 = $data3 . "_" . $count;
-                                }
-                                break;
                         case 4:
-                                if (!empty($data3)) {
-                                        $db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
-                                        $stmt = $db->prepare("SELECT * FROM `{$code}`");
-                                        $stmt->execute();
-                                        $count = $stmt->rowCount();
-                                        // $data3 = $data3 . "_" . str_pad($count, 4, 0, STR_PAD_LEFT);
+                                if (!empty($data3))
                                         $data3 = $data3 . "_" . $count;
-
-                                }
-                                // $data3 = $data3 . $data2;
+                                break;
+                        case 5:
+                                $stmt = $db->prepare("SELECT * FROM `{$code}` WHERE id = 5");
+                                $stmt->execute();
+                                $data2 = $stmt->rowCount();
                                 break;
                 }
                 if ($insert_flag) {
 
 
-                        $db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
-                        $stmt = $db->prepare("SELECT * FROM `{$code}`");
-                        $stmt->execute();
-                        $count = $stmt->rowCount();
+                        
                         //  echo($count);
                 // 挿入***********************************************
                         $write = $db->prepare("INSERT INTO `{$code}` (num, id, data1, data2, data3, data4, data5) VALUES(:num, :id, :data1, :data2, :data3, :data4, :data5)");
@@ -204,10 +192,16 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
 
                 $data = "";
                 $data1 = "";
+                $data2 = "";
+                $data3 = "";
                 if (isset($_POST['data']))
                         $data = $_POST['data'];
                 if (isset($_POST['data1']))
                         $data1 = $_POST['data1'];
+                if (isset($_POST['data2']))
+                        $data2 = $_POST['data2'];
+                if (isset($_POST['data3']))
+                        $data3 = $_POST['data3'];
                 $id = $_POST['id'];
                 $code = $_POST['code'];
 
@@ -216,13 +210,40 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
                 $insert_flag = true;
                 switch ($id) {
                         case 1:
-                                
-                                // $sqldata = $db->prepare("DELETE FROM `{$code}` WHERE  `{$code}`.id = '$id' AND `{$code}`.data2 = '$data' AND `{$code}`.data1 = '$data1'");
                                 $sqldata = $db->prepare("UPDATE  `{$code}` set id = -1 WHERE  `{$code}`.id = '$id' AND `{$code}`.data2 = '$data' AND `{$code}`.data1 = '$data1'");
                                 $sqldata->execute();
                                 break;
                         case 4:
                                 $sqldata1 = $db->prepare("UPDATE  `{$code}` set data5 = 1 WHERE num = '$data'");
+                                $sqldata1->execute();
+                                break;
+                        case 5:
+                                $num = "";
+                                if (isset($_POST['num']))
+                                        $num = $_POST['num'];
+                                // if (strcmp($data, "") != 0) {
+                                //         $sqldata1 = $db->prepare("UPDATE  `{$code}` set data1 = '$data' WHERE data2 = '$num' AND id = '$id'");
+                                //         $sqldata1->execute();
+                                // }
+                                // if (strcmp($data1, "") != 0) {
+                                //         $sqldata1 = $db->prepare("UPDATE  `{$code}` set data3 = '$data1' WHERE data2 = '$num' AND id = '$id'");
+                                //         $sqldata1->execute();
+                                // }
+                                // if (strcmp($data2, "") != 0) {
+                                //         $sqldata1 = $db->prepare("UPDATE  `{$code}` set data4 = '$data2' WHERE data2 = '$num' AND id = '$id'");
+                                //         $sqldata1->execute();
+                                // }
+                                // if (strcmp($data3, "") != 0) {
+                                //         $sqldata1 = $db->prepare("UPDATE  `{$code}` set data5 = '$data2' WHERE data2 = '$num' AND id = '$id'");
+                                //         $sqldata1->execute();
+                                // }
+                                $sqldata1 = $db->prepare("UPDATE  `{$code}` set data1 = '$data' WHERE data1 != '$data' AND data2 = '$num' AND id = '$id'");
+                                $sqldata1->execute();
+                                $sqldata1 = $db->prepare("UPDATE  `{$code}` set data3 = '$data1' WHERE data3 != '$data1' AND data2 = '$num' AND id = '$id'");
+                                $sqldata1->execute();
+                                $sqldata1 = $db->prepare("UPDATE  `{$code}` set data4 = '$data2' WHERE data4 != '$data2' AND data2 = '$num' AND id = '$id'");
+                                $sqldata1->execute();
+                                $sqldata1 = $db->prepare("UPDATE  `{$code}` set data5 = '$data2' WHERE data5 != '$data3' AND data2 = '$num' AND id = '$id'");
                                 $sqldata1->execute();
                                 break;
                 }
