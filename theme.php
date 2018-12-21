@@ -1,6 +1,8 @@
 
 <?php
 $word = array('id', 'title', 'category', 'situation', 'time', 'area', 'image', 'target', 'aim', 'open', 'create_day', 'play_count', 'assessment0', 'assessment1', 'assessment2', 'assessment3', 'assessment4', 'assessment5', 'assessment6', 'assessment7', 'assessment8', 'assessment9');
+
+// テーマ登録時の必須項目の確認*******************************
 $f = 1;
 for ($i = 1; $i < 4; $i++) {
         if (!(isset($_POST[$word[$i]])))
@@ -10,6 +12,7 @@ if (!(isset($_POST[$word[9]])))
         $f = 0;
 if (!(isset($_POST[$word[12]])))
         $f = 0;
+// ***************************************************
 if (isset($_POST["mode"]))
         $f = 0;
 if ($f == 1)//テーマの新規登録（idは重複不可）

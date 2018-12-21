@@ -3,6 +3,7 @@ $mode = "";
 if (isset($_POST['mode']))
         $mode = $_POST['mode'];
 
+        // 現在の時刻取得
 $now_time = array(
         "year" => date("Y"),
         "month" => date("m"),
@@ -12,6 +13,7 @@ $now_time = array(
         "second" => date("s")
 );
 
+// ゲーム開始時に時刻登録
 if (isset($_POST['code']) && strcmp($mode, "new") == 0) {
 
         $code = $_POST['code'];
@@ -32,15 +34,16 @@ if (isset($_POST['code']) && strcmp($mode, "new") == 0) {
                 $write->bindvalue(':data5', "");
                 $write->execute();
 
+                // ゲーム状況（stage）とプレイ日時を更新
                 $day = date("Y/m/d");
                 $sqldata = $db->prepare("UPDATE  eventcode set stage = 1 WHERE code = '$code'");
                 $sqldata->execute();
                 $sqldata = $db->prepare("UPDATE  eventcode set play_day = '$day' WHERE code = '$code'");
                 $sqldata->execute();
 
+                // プレイ回数を更新
                 $sqldata1 = $db->prepare("SELECT theme_id, play_count FROM eventcode, theme WHERE eventcode.code = '$code' AND theme.id = eventcode.theme_id");
                 $sqldata1->execute();
-
                 while ($row = $sqldata1->fetch()) {
                         $db_data[] = array(
                                 'theme_id' => $row['theme_id'],
@@ -58,7 +61,7 @@ if (isset($_POST['code']) && strcmp($mode, "new") == 0) {
         //     echo $e->getMessage();
                 exit;
         }
-} else if (isset($_POST['code']) && strcmp($mode, "update") == 0) {
+} else if (isset($_POST['code']) && strcmp($mode, "update") == 0) {//プレイ中の経過時間更新
 
         $code = $_POST['code'];
         try {
@@ -106,7 +109,7 @@ if (isset($_POST['code']) && strcmp($mode, "new") == 0) {
         //     echo $e->getMessage();
                 exit;
         }
-} else if (isset($_POST['code']) && strcmp($mode, "finish") == 0) {
+} else if (isset($_POST['code']) && strcmp($mode, "finish") == 0) {//ゲーム終了合図データの登録
         $code = $_POST['code'];
 
         $db = new PDO('mysql:host=192.168.0.159;dbname=HUG;', 'miyashita', 'sonicdance');

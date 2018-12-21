@@ -1,6 +1,5 @@
 
 <?php
-// print_r($_POST);
 
 if(isset($_POST['info_id']) && isset($_POST['data1']) && isset($_POST['number'])){//新規ユーザ登録
         try{
