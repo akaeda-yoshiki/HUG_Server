@@ -1,3 +1,4 @@
+
 <?php
 $mode = "";
 if (isset($_POST['mode']))
@@ -52,6 +53,8 @@ if (isset($_POST['theme_id']) && isset($_POST['mail']) && isset($_POST['open']))
 	// SQL実行
                 $create = $db->prepare($sql);
                 $create->execute();
+
+                echo $code;
 
                 // mkdir("image/$code", 777);
                 $db = null;// 切断
